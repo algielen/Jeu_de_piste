@@ -5,4 +5,4 @@ Ce projet est un jeu de piste.
 # Auteurs
 
 * Alexandre GIELEN
-* Laurent BATSLA
+* Laurent BATSLÉ
