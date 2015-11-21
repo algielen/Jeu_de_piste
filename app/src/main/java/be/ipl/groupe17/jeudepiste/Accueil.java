@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.Arrays;
 
 public class Accueil extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -25,10 +28,14 @@ public class Accueil extends AppCompatActivity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
+    private Fragment fragments[];
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fragments = new Fragment[3]; //3 fragments pour le moment
+        Arrays.fill(fragments, null);
         setContentView(R.layout.activity_accueil);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
@@ -45,9 +52,43 @@ public class Accueil extends AppCompatActivity
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                .commit();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        //on crée les fragments une fois et on les stocke dans un array
+        //TODO : possibilité de mettre en commun?
+        Fragment fragment;
+        switch (position) {
+            case 0:
+                if (fragments[position] == null) {
+                    fragment = new JeuFragment();
+                    fragments[position]= fragment;
+                } else {
+                    fragment = fragments[position];
+                }
+                break;
+            case 1:
+                if (fragments[position] == null) {
+                    fragment = new ProgressionFragment();
+                    fragments[position]= fragment;
+                } else {
+                    fragment = fragments[position];
+                }
+                break;
+            case 2:
+                if (fragments[position] == null) {
+                    fragment = new AProposFragment();
+                    fragments[position]= fragment;
+                } else {
+                    fragment = fragments[position];
+                }
+                break;
+            default:
+                //on ne devrait pas arriver ici
+                fragment = PlaceholderFragment.newInstance(position + 1);
+        }
+
+
+        fragmentTransaction.replace(R.id.container, fragment);
+        fragmentTransaction.commit();
     }
 
     public void onSectionAttached(int number) {
