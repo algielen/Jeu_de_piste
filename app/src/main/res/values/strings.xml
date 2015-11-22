@@ -5,13 +5,19 @@
     <string name="title_section2">Progression</string>
     <string name="title_section3">À propos</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open">Ouvrir le panneau de navigation</string>
+    <string name="navigation_drawer_close">Fermer le panneau de navigation</string>
 
     <string name="action_example">Example action</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Options</string>
+    <string name="insufficient_permission_title">Permissions insuffisantes</string>
+    <string name="insufficient_permission">Vous ne disposez pas de permisions suffisantes pour
+        pouvoir utiliser cet élement.</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="button_game_start">Démarrer la partie</string>
+    <string name="button_game_stop">Arrêter la partie</string>
 </resources>
