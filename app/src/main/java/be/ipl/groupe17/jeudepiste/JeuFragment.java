@@ -2,6 +2,7 @@ package be.ipl.groupe17.jeudepiste;
 
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -11,32 +12,41 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class JeuFragment extends Fragment implements LocationListener {
+    protected Activity activity;
     private LocationManager locationManager;
     private boolean partieEnCours;
+    private Location lastKnownLocation; //TODO -> dans le model
 
     public JeuFragment() {
         // Required empty public constructor
     }
 
 
-    // TODO : savedInstanceState
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
+        partieEnCours = false;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        partieEnCours = false;
         View thisView = inflater.inflate(R.layout.fragment_jeu, container, false);
         Button button = (Button) thisView.findViewById(R.id.button_game);
         // impossible de continuer si ça rate
@@ -50,14 +60,36 @@ public class JeuFragment extends Fragment implements LocationListener {
                                               toggleJeu();
                                           }
                                       }
-
             );
         }
         return thisView;
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Button button = (Button) activity.findViewById(R.id.button_game);
+        if (savedInstanceState != null) {
+            partieEnCours = savedInstanceState.getBoolean("partieEnCours");
+            if (partieEnCours) {
+                button.setText(R.string.button_game_stop);
+                demarrerJeu();
+            } else {
+                button.setText(R.string.button_game_start);
+            }
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putBoolean("partieEnCours", partieEnCours);
+        //savedInstanceState.putInt("lastknownlocation", lastknownlocation); //TODO
+
+    }
+
     private void showErreurPermission() {
-        new AlertDialog.Builder(getActivity()).setTitle(R.string.insufficient_permission_title)
+        new AlertDialog.Builder(activity).setTitle(R.string.insufficient_permission_title)
                 .setMessage(R.string.insufficient_permission)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
@@ -79,10 +111,14 @@ public class JeuFragment extends Fragment implements LocationListener {
                 != PackageManager.PERMISSION_GRANTED) {
             showErreurPermission();
         } else {
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+            //on prend la première location
+            lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            TextView textView = (TextView) activity.findViewById(R.id.text_location);
+            textView.setText(lastKnownLocation.toString());
             partieEnCours = true;
             // on change le texte du bouton pour refléter l'état actuel
-            ((Button) getActivity().findViewById(R.id.button_game)).setText(R.string.button_game_stop);
+            ((Button) activity.findViewById(R.id.button_game)).setText(R.string.button_game_stop);
         }
 
     }
@@ -91,7 +127,7 @@ public class JeuFragment extends Fragment implements LocationListener {
         //on vérifie qu'on a la permission d'accéder à la géoloc.
         if (ActivityCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                && ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             showErreurPermission();
         } else {
@@ -99,7 +135,17 @@ public class JeuFragment extends Fragment implements LocationListener {
             locationManager.removeUpdates(this);
             partieEnCours = false;
             // on change le texte du bouton pour refléter l'état actuel
-            ((Button) getActivity().findViewById(R.id.button_game)).setText(R.string.button_game_start);
+            ((Button) activity.findViewById(R.id.button_game)).setText(R.string.button_game_start);
+        }
+    }
+
+    // source : http://stackoverflow.com/a/32088447
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof Activity) {
+            activity = (Activity) context;
         }
     }
 
@@ -109,7 +155,16 @@ public class JeuFragment extends Fragment implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        //TODO
+        if (Geolocation.isBetterLocation(location, lastKnownLocation)) {
+            lastKnownLocation = location;
+            TextView textView = (TextView) activity.findViewById(R.id.text_location);
+            if (textView != null) {
+                textView.setText(location.toString());
+            }
+        } else {
+            Log.v(getTag(), "New location " + location.toString()
+                    + " was less accurate than previous location and has been discarded.");
+        }
     }
 
     @Override

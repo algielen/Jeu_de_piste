@@ -28,14 +28,19 @@ public class Accueil extends AppCompatActivity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
-    private Fragment fragments[];
+    private Fragment currentFragment;
+    private int currentPosition;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fragments = new Fragment[3]; //3 fragments pour le moment
-        Arrays.fill(fragments, null);
+        if (savedInstanceState != null) {
+            //Restore the fragment's instance
+            currentFragment = getSupportFragmentManager().getFragment(
+                    savedInstanceState, "fragment");
+        }
+
         setContentView(R.layout.activity_accueil);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
@@ -46,6 +51,7 @@ public class Accueil extends AppCompatActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
     }
 
     @Override
@@ -54,39 +60,28 @@ public class Accueil extends AppCompatActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         //on crée les fragments une fois et on les stocke dans un array
-        //TODO : possibilité de mettre en commun?
-        Fragment fragment;
-        switch (position) {
-            case 0:
-                if (fragments[position] == null) {
+
+        Fragment fragment = currentFragment;
+        if (fragment == null || position != currentPosition) {
+            switch (position) {
+                case 0:
                     fragment = new JeuFragment();
-                    fragments[position]= fragment;
-                } else {
-                    fragment = fragments[position];
-                }
-                break;
-            case 1:
-                if (fragments[position] == null) {
+                    currentPosition = 0;
+                    break;
+                case 1:
                     fragment = new ProgressionFragment();
-                    fragments[position]= fragment;
-                } else {
-                    fragment = fragments[position];
-                }
-                break;
-            case 2:
-                if (fragments[position] == null) {
+                    currentPosition = 1;
+                    break;
+                case 2:
                     fragment = new AProposFragment();
-                    fragments[position]= fragment;
-                } else {
-                    fragment = fragments[position];
-                }
-                break;
-            default:
-                //on ne devrait pas arriver ici
-                fragment = PlaceholderFragment.newInstance(position + 1);
+                    currentPosition = 2;
+                    break;
+                default:
+                    fragment = new PlaceholderFragment();
+                    currentPosition = -1;
+            }
+            currentFragment = fragment;
         }
-
-
         fragmentTransaction.replace(R.id.container, fragment);
         fragmentTransaction.commit();
     }
@@ -141,44 +136,18 @@ public class Accueil extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
+    //source : http://stackoverflow.com/a/17135346
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
 
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
+        //Save the fragment's instance
+
+        if (currentFragment != null) {
+            if (currentFragment.isAdded()) {
+                getSupportFragmentManager().putFragment(outState, "fragment", currentFragment);
+            }
         }
 
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_accueil, container, false);
-            return rootView;
-        }
-
-        @Override
-        public void onAttach(Activity activity) {
-            super.onAttach(activity);
-            ((Accueil) activity).onSectionAttached(
-                    getArguments().getInt(ARG_SECTION_NUMBER));
-        }
     }
-
 }

@@ -20,4 +20,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="button_game_start">Démarrer la partie</string>
     <string name="button_game_stop">Arrêter la partie</string>
+    <string name="text_location_label">Votre position :</string>
+    <string name="text_unknown_location">Position inconuue</string>
 </resources>

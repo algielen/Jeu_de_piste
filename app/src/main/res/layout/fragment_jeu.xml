@@ -2,15 +2,11 @@
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/jeu_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="be.ipl.groupe17.jeudepiste.JeuFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Test jeu" />
+    tools:context="be.ipl.groupe17.jeudepiste.JeuFragment"
+    >
 
     <Button
         android:layout_width="wrap_content"
@@ -18,5 +14,28 @@
         android:text="@string/button_game_start"
         android:id="@+id/button_game"
         android:layout_gravity="center"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal|bottom">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/text_location_label"
+            android:id="@+id/text_location_label"
+            android:layout_gravity="center_horizontal|bottom" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/text_unknown_location"
+            android:id="@+id/text_location"
+            android:layout_gravity="bottom" />
+    </LinearLayout>
 
 </FrameLayout>
