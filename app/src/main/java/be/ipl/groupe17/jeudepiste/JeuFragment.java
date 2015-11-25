@@ -5,6 +5,8 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -31,6 +33,7 @@ public class JeuFragment extends Fragment implements LocationListener {
     private LocationManager locationManager;
     private boolean partieEnCours;
     private Model model;
+    private boolean epreuveEnCours = false; // TODO : il faudrait faire un mutex plutot
 
     public static final int RESULT_OK = -1;
 
@@ -160,31 +163,51 @@ public class JeuFragment extends Fragment implements LocationListener {
      Méthodes de géolocalisation
      */
 
+
+    //TODO : arrêter de recevoir des positions pendant l'épreuve?
     @Override
     public void onLocationChanged(Location location) {
-        Location currentBestLocation = model.getCurrentBestLocation();
-        if (currentBestLocation == null || Geolocation.isBetterLocation(location, currentBestLocation)) {
-            model.setCurrentBestLocation(location);
-            //on affiche la nouvelle position TODO : temporaire
-            TextView textView = (TextView) activity.findViewById(R.id.text_location);
-            if (textView != null) {
-                textView.setText(location.toString());
-            }
-
-            //TODO : remplacer ça par un appel à la page HTML etc
-            for (Zone zone : model.getZones()) {
-                if (zone.contains(location)) {
-//                    new AlertDialog.Builder(activity).setTitle("La position est contenue dans la zone")
-//                            .setMessage("Vous êtes à "+ zone.distanceTo(location)+ "m de "+zone.getNom())
-//                            .setIcon(android.R.drawable.ic_dialog_map)
-//                            .show();
-                    // à vocation de test
-                    takeAPicture();
+        if (!epreuveEnCours) {
+            Location currentBestLocation = model.getCurrentBestLocation();
+            if (currentBestLocation == null || Geolocation.isBetterLocation(location, currentBestLocation)) {
+                model.setCurrentBestLocation(location);
+                //on affiche la nouvelle position TODO : temporaire
+                TextView textView = (TextView) activity.findViewById(R.id.text_location);
+                if (textView != null) {
+                    textView.setText(location.toString());
                 }
+
+                //TODO : remplacer ça par un appel à la page HTML etc
+                for (Zone zone : model.getZones()) {
+                    if (zone.contains(location)) {
+                        epreuveEnCours = true;
+                        // à vocation de test
+                        new AlertDialog.Builder(activity).setTitle("La position est contenue dans la zone")
+                                .setMessage("Vous êtes à " + zone.distanceTo(location) + "m de " + zone.getNom()
+                                        + ". Voulez vous tenter l'épreuve ?")
+                                .setIcon(android.R.drawable.ic_dialog_map)
+                                .setPositiveButton("Oui", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        takeAPicture();
+                                    }
+                                })
+                                .setNegativeButton("Non", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        epreuveEnCours = false;
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .show();
+
+
+                    }
+                }
+            } else {
+                Log.v(getTag(), "New location " + location.toString()
+                        + " was less accurate than previous location and has been discarded.");
             }
-        } else {
-            Log.v(getTag(), "New location " + location.toString()
-                    + " was less accurate than previous location and has been discarded.");
         }
     }
 
@@ -204,17 +227,37 @@ public class JeuFragment extends Fragment implements LocationListener {
      * Gestion de l'appareil photo
      */
     public void takeAPicture() {
+        // epreuveEnCours = true;
         String photoPath = null;
         try {
             File image = Camera.createImageFile();
             model.setCurrentPhoto(image);
             //photoPath = "file:" + image.getAbsolutePath(); //utile si on va la voir par après
+            //TODO : vérifier que c'est bien le fragmentactivity
             Camera.dispatchTakePictureIntent(activity, image);
 
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            //epreuveEnCours = false;
         }
     }
 
-
+    //retour de la prise de photo
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Camera.REQUEST_IMAGE_CAPTURE) {
+            if (resultCode == RESULT_OK) {
+                //TODO : vérifier les données EXIF pour la position ?
+                //TODO : mettre à jour la progression
+                Camera.galleryAddPic(model.getCurrentPhoto(), activity);
+                new AlertDialog.Builder(activity).setTitle("Bravo.")
+                        .setMessage("Vous avez bien pris une photo")
+                        .setIcon(android.R.drawable.ic_dialog_map)
+                        .setPositiveButton("Ok", null)
+                        .show();
+                epreuveEnCours = false;
+            }
+        }
+    }
 }

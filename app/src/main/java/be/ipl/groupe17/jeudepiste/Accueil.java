@@ -156,22 +156,14 @@ public class Accueil extends AppCompatActivity
         }
     }
 
-    //retour de la prise de photo
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Camera.REQUEST_IMAGE_CAPTURE) {
-            if (resultCode == RESULT_OK) {
-                //TODO : vérifier les données EXIF pour la position ?
-                //TODO : mettre à jour la progression
-                //Camera.galleryAddPic(model.);
-                new AlertDialog.Builder(this).setTitle("Bravo.")
-                        .setMessage("Vous avez bien pris une photo")
-                        .setIcon(android.R.drawable.ic_dialog_map)
-                        .setPositiveButton("Ok", null)
-                        .show();
-            }
+        //TODO : méthode 'sale', réctifier ça
+        if (requestCode == Camera.REQUEST_IMAGE_CAPTURE || currentFragment instanceof JeuFragment) {
+            currentFragment.onActivityResult(requestCode, resultCode, data);
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
-
 
 }

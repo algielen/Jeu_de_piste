@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.FragmentActivity;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,10 +42,9 @@ public class Camera {
         return image;
     }
 
-    static void galleryAddPic(String photoPath, Activity activity) {
+    static void galleryAddPic(File image, Activity activity) {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(photoPath);
-        Uri contentUri = Uri.fromFile(f);
+        Uri contentUri = Uri.fromFile(image);
         mediaScanIntent.setData(contentUri);
         activity.sendBroadcast(mediaScanIntent);
     }
