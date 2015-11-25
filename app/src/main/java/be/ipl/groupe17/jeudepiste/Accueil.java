@@ -1,6 +1,10 @@
 package be.ipl.groupe17.jeudepiste;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,6 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 
 public class Accueil extends AppCompatActivity
@@ -148,6 +154,24 @@ public class Accueil extends AppCompatActivity
                 getSupportFragmentManager().putFragment(outState, "fragment", currentFragment);
             }
         }
-
     }
+
+    //retour de la prise de photo
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Camera.REQUEST_IMAGE_CAPTURE) {
+            if (resultCode == RESULT_OK) {
+                //TODO : vérifier les données EXIF pour la position ?
+                //TODO : mettre à jour la progression
+                //Camera.galleryAddPic(model.);
+                new AlertDialog.Builder(this).setTitle("Bravo.")
+                        .setMessage("Vous avez bien pris une photo")
+                        .setIcon(android.R.drawable.ic_dialog_map)
+                        .setPositiveButton("Ok", null)
+                        .show();
+            }
+        }
+    }
+
+
 }

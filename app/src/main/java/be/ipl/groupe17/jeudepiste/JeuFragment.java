@@ -12,13 +12,15 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import java.io.File;
+import java.io.IOException;
 
 
 /**
@@ -29,6 +31,8 @@ public class JeuFragment extends Fragment implements LocationListener {
     private LocationManager locationManager;
     private boolean partieEnCours;
     private Model model;
+
+    public static final int RESULT_OK = -1;
 
     public JeuFragment() {
         // Required empty public constructor
@@ -170,11 +174,12 @@ public class JeuFragment extends Fragment implements LocationListener {
             //TODO : remplacer ça par un appel à la page HTML etc
             for (Zone zone : model.getZones()) {
                 if (zone.contains(location)) {
-                    //à vocation de test
-                    new AlertDialog.Builder(activity).setTitle("La position est contenue dans la zone")
-                            .setMessage("Vous êtes à "+ zone.distanceTo(location)+ "m de "+zone.getNom())
-                            .setIcon(android.R.drawable.ic_dialog_map)
-                            .show();
+//                    new AlertDialog.Builder(activity).setTitle("La position est contenue dans la zone")
+//                            .setMessage("Vous êtes à "+ zone.distanceTo(location)+ "m de "+zone.getNom())
+//                            .setIcon(android.R.drawable.ic_dialog_map)
+//                            .show();
+                    // à vocation de test
+                    takeAPicture();
                 }
             }
         } else {
@@ -185,16 +190,31 @@ public class JeuFragment extends Fragment implements LocationListener {
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
-
     }
 
     @Override
     public void onProviderEnabled(String provider) {
-
     }
 
     @Override
     public void onProviderDisabled(String provider) {
-
     }
+
+    /*
+     * Gestion de l'appareil photo
+     */
+    public void takeAPicture() {
+        String photoPath = null;
+        try {
+            File image = Camera.createImageFile();
+            model.setCurrentPhoto(image);
+            //photoPath = "file:" + image.getAbsolutePath(); //utile si on va la voir par après
+            Camera.dispatchTakePictureIntent(activity, image);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

@@ -2,6 +2,7 @@ package be.ipl.groupe17.jeudepiste;
 
 import android.location.Location;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -10,6 +11,8 @@ import java.util.ArrayList;
 public class Model {
     private Location currentBestLocation;
     private ArrayList<Zone> zones;
+    private File currentPhoto;
+    private Zone currentZone; //quand on est occupé à remplir un challenge
 
     private static Model instance;
     public static Model getInstance(){
@@ -43,4 +46,21 @@ public class Model {
     public void setCurrentBestLocation(Location currentBestLocation) {
         this.currentBestLocation = currentBestLocation;
     }
+
+    public File getCurrentPhoto() {
+        return currentPhoto;
+    }
+
+    public void setCurrentPhoto(File currentPhoto) {
+        this.currentPhoto = currentPhoto;
+    }
+
+    public Zone getCurrentZone() {
+        return currentZone;
+    }
+
+    public void setCurrentZone(Zone currentZone) {
+        this.currentZone = currentZone;
+    }
 }
+
