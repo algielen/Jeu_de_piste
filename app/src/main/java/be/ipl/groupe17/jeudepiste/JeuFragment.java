@@ -28,12 +28,11 @@ public class JeuFragment extends Fragment implements LocationListener {
     protected Activity activity;
     private LocationManager locationManager;
     private boolean partieEnCours;
-    private Location lastKnownLocation; //TODO -> dans le model
+    private Model model;
 
     public JeuFragment() {
         // Required empty public constructor
     }
-
 
 
     @Override
@@ -41,6 +40,7 @@ public class JeuFragment extends Fragment implements LocationListener {
         super.onCreate(savedInstanceState);
         locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
         partieEnCours = false;
+        model = Model.getInstance();
     }
 
     @Override
@@ -78,6 +78,12 @@ public class JeuFragment extends Fragment implements LocationListener {
                 button.setText(R.string.button_game_start);
             }
         }
+        if (model.getCurrentBestLocation() != null) {
+            TextView textView = (TextView) activity.findViewById(R.id.text_location);
+            if (textView != null) {
+                textView.setText(model.getCurrentBestLocation().toString());
+            }
+        }
     }
 
     @Override
@@ -112,10 +118,7 @@ public class JeuFragment extends Fragment implements LocationListener {
             showErreurPermission();
         } else {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-            //on prend la première location
-            lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            TextView textView = (TextView) activity.findViewById(R.id.text_location);
-            textView.setText(lastKnownLocation.toString());
+
             partieEnCours = true;
             // on change le texte du bouton pour refléter l'état actuel
             ((Button) activity.findViewById(R.id.button_game)).setText(R.string.button_game_stop);
@@ -155,11 +158,24 @@ public class JeuFragment extends Fragment implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        if (Geolocation.isBetterLocation(location, lastKnownLocation)) {
-            lastKnownLocation = location;
+        Location currentBestLocation = model.getCurrentBestLocation();
+        if (currentBestLocation == null || Geolocation.isBetterLocation(location, currentBestLocation)) {
+            model.setCurrentBestLocation(location);
+            //on affiche la nouvelle position TODO : temporaire
             TextView textView = (TextView) activity.findViewById(R.id.text_location);
             if (textView != null) {
                 textView.setText(location.toString());
+            }
+
+            //TODO : remplacer ça par un appel à la page HTML etc
+            for (Zone zone : model.getZones()) {
+                if (zone.contains(location)) {
+                    //à vocation de test
+                    new AlertDialog.Builder(activity).setTitle("La position est contenue dans la zone")
+                            .setMessage("Vous êtes à "+ zone.distanceTo(location)+ "m de "+zone.getNom())
+                            .setIcon(android.R.drawable.ic_dialog_map)
+                            .show();
+                }
             }
         } else {
             Log.v(getTag(), "New location " + location.toString()
