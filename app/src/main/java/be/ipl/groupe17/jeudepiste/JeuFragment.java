@@ -124,7 +124,23 @@ public class JeuFragment extends Fragment implements LocationListener {
                 != PackageManager.PERMISSION_GRANTED) {
             showErreurPermission();
         } else {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, this);
+            //TODO : fusionner
+            if (model.getCurrentBestLocation() == null) {
+                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                //location est null si le provider est disabled
+                if (location != null) {
+                    model.setCurrentBestLocation(location);
+                } else {
+                    locationManager.removeUpdates(this);
+                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, this);
+                    location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                }
+                TextView textView = (TextView) activity.findViewById(R.id.text_location);
+                if (textView != null) {
+                    textView.setText(location.toString());
+                }
+            }
 
             partieEnCours = true;
             // on change le texte du bouton pour refléter l'état actuel
@@ -200,8 +216,6 @@ public class JeuFragment extends Fragment implements LocationListener {
                                     }
                                 })
                                 .show();
-
-
                     }
                 }
             } else {

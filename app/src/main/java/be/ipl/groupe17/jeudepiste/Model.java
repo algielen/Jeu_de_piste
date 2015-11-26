@@ -29,6 +29,7 @@ public class Model {
         zones.add(new Zone(50.836806d, 4.427361d, 100, "WSP100"));
         zones.add(new Zone(50.836806d, 4.427361d, 200, "WSP200"));
         zones.add(new Zone(50.836806d, 4.427361d, 300, "WSP300"));
+        zones.add(new Zone(50.849425d, 4.450960d, 100, "IPL100"));
     }
 
     public ArrayList<Zone> getZones() {
