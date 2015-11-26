@@ -1,4 +1,4 @@
-package be.ipl.groupe17.jeudepiste;
+package be.ipl.groupe17.jeudepiste.model;
 
 import android.location.Location;
 
