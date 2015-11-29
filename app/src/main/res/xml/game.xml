@@ -1,0 +1,54 @@
+<game>
+	<part num="1" url="file://part1.html">
+		<area>
+			<!-- Mettre les coordonnées exactes -->
+			<Latitude>0</Latitude>
+			<Longitude>0</Longitude>
+			<tolerance>0</tolerance>
+		</area>
+		<intro>
+			Bienvenue dans le hall de l'IPL, au niveau des locaux informatiques.
+		</intro>
+		<quiz>
+		
+			<question num="1.1" uri="ToComplete" type="fill_in" points="5">
+				<enigma>On peut voir l'... en face de l'IPL </enigma>
+				<area>
+					<!-- Mettre les coordonnées exactes -->
+					<Latitude>50.849425</Latitude>
+					<Longitude>4.450960</Longitude>
+					<tolerance>100</tolerance>
+				</area>
+				<answer>ISEI</answer>
+			</question>
+		
+			<question num="1.2" uri="ToComplete" type="picture" points="3">
+				<enigma>Prenez le secrétairiat en photo</enigma>
+				<area>
+					<!-- Mettre les coordonnées exactes -->
+					<Latitude>50.849425</Latitude>
+					<Longitude>4.450960</Longitude>
+					<tolerance>10</tolerance>
+				</area>
+			</question>
+		
+			<question num="1.3" uri="ToComplete" type="qcm" points="5">
+				<enigma>Combien de boutons y a-t-il à la machine à café?</enigma>
+				<area>
+					<!-- Mettre les coordonnées exactes -->
+					<Latitude>50.849425</Latitude>
+					<Longitude>4.450960</Longitude>
+					<tolerance>10</tolerance>
+				</area>
+				<!-- Mettre la bonne réponse à true -->
+				<answer true="false">2</answer>
+				<answer true="false">4</answer>
+				<answer true="false">6</answer>
+				<answer true="true">8</answer> <!-- pas vérifié -->
+				<answer true="false">10</answer>
+				<answer true="false">12</answer>
+			</question>
+
+		</quiz>
+	</part>
+</game>

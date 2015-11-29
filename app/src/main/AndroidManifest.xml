@@ -26,9 +26,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".PhotoEpreuveActivity">
-        <!--android:parentActivityName=".Accueil" -->
 
-    </activity>
-</application>
+            <!-- android:parentActivityName=".Accueil" -->
 
-    </manifest>
+        </activity>
+        <activity android:name=".QCMEpreuveActivity"></activity>
+    </application>
+
+</manifest>

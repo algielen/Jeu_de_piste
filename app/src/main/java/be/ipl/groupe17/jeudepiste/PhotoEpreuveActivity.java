@@ -9,16 +9,16 @@ import android.view.View;
 import java.io.File;
 import java.io.IOException;
 
-public class PhotoEpreuveActivity extends AppCompatActivity {
-    private Model model;
+public class PhotoEpreuveActivity extends EpreuveActivity {
+
     public static final int REQUEST_PHOTO_EPREUVE = 2;
 
+    //TODO : récupérer la description
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_epreuve2);
-        model = Model.getInstance();
     }
 
     /*

@@ -207,7 +207,7 @@ public class JeuFragment extends Fragment implements LocationListener {
         }
     }
 
-    private void offerEpreuve(Epreuve epreuve, double distance) {
+    private void offerEpreuve(final Epreuve epreuve, double distance) {
         epreuveEnCours = true;
         Zone currentZone = epreuve.getZone();
         // à vocation de test
@@ -219,8 +219,23 @@ public class JeuFragment extends Fragment implements LocationListener {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //on lance l'activity de l'épreuve
-                        Intent intent = new Intent(activity, PhotoEpreuveActivity.class);
-                        activity.startActivityForResult(intent, PhotoEpreuveActivity.REQUEST_PHOTO_EPREUVE);
+                        Intent intent;
+                        switch (epreuve.getType()) {
+                            case "picture":
+                                intent = new Intent(activity, PhotoEpreuveActivity.class);
+                                intent.putExtra("num", epreuve.getNum()); //l'id de l'épreuve
+                                activity.startActivityForResult(intent, PhotoEpreuveActivity.REQUEST_PHOTO_EPREUVE);
+                                break;
+                            case "qcm":
+                                intent = new Intent(activity, QCMEpreuveActivity.class);
+                                intent.putExtra("num", epreuve.getNum()); //l'id de l'épreuve
+                                activity.startActivityForResult(intent, QCMEpreuveActivity.REQUEST_QCM);
+                                break;
+                            case "fill_in":
+                                break;
+                            default:
+                                //TODO
+                        }
                     }
                 })
                 .setNegativeButton("Non", new DialogInterface.OnClickListener() {
@@ -267,7 +282,14 @@ public class JeuFragment extends Fragment implements LocationListener {
                         .setPositiveButton("Ok", null)
                         .show();
                 break;
-
+            case QCMEpreuveActivity.REQUEST_QCM:
+                epreuveEnCours = false;
+                new AlertDialog.Builder(activity).setTitle(title)
+                        .setMessage(text)
+                        .setIcon(android.R.drawable.ic_menu_camera)
+                        .setPositiveButton("Ok", null)
+                        .show();
+                break;
             default:
                 epreuveEnCours = false;
                 //TODO : erreur?

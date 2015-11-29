@@ -39,11 +39,11 @@ public class Model {
         zones.add(new Zone(50.849425d, 4.450960d, 200, "IPL200"));
 
         epreuves = new ArrayList<>();
-        epreuves.add(new Epreuve("Maison communale", true, zones.get(0)));
-        epreuves.add(new Epreuve("Arrêt Collecto", true, zones.get(1)));
-        epreuves.add(new Epreuve("Abribus", false, zones.get(2)));
-        epreuves.add(new Epreuve("Parc", false, zones.get(3)));
-        epreuves.add(new Epreuve("Librairie", false, zones.get(4)));
+        epreuves.add(new Epreuve("Maison communale", true, zones.get(0), "picture"));
+        epreuves.add(new Epreuve("Arrêt Collecto", true, zones.get(1), "picture"));
+        epreuves.add(new Epreuve("1.3", false, zones.get(2), "qcm"));
+        epreuves.add(new Epreuve("Parc", false, zones.get(3), "picture"));
+        epreuves.add(new Epreuve("Librairie", false, zones.get(4), "picture"));
 
         currentEpreuvePosition = 2;
 
