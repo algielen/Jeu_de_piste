@@ -4,10 +4,14 @@
     android:layout_height="match_parent">
 
     <CheckedTextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/default_listview_item"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:minHeight="?android:attr/listPreferredItemHeight"
+        android:padding="8dp"
         android:id="@+id/checkedTextView"
-        android:layout_gravity="center_vertical"
-        android:checked="false" />
+        android:layout_gravity="center_horizontal"
+        android:checked="false"
+        android:checkMark="?android:attr/listChoiceIndicatorMultiple"/>
 </LinearLayout>

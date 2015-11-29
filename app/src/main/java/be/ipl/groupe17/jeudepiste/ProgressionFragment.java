@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,6 +55,10 @@ public class ProgressionFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        ArrayList<Epreuve> arrayList = new ArrayList<>(Model.getInstance().getEpreuves());
+        EpreuveAdapter adapter = new EpreuveAdapter(activity, arrayList);
+
+        listview.setAdapter(adapter);
     }
 
 }
