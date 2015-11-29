@@ -23,4 +23,12 @@
     <string name="text_location_label">Votre position :</string>
     <string name="text_unknown_location">Position inconuue</string>
     <string name="default_listview_item">Inconnu</string>
+    <string name="text_default_photo_desc">Il n\'y a pas de description pour cette épreuve.</string>
+    <string name="text_take_picture">Prendre une photo</string>
+
+    <string name="text_failure_title">Dommage</string>
+    <string name="text_failure">Vous n\'avez pas réussi l\'épreuve :(.</string>
+    <string name="text_success_title">Bravo</string>
+    <string name="text_success">Vous avez réussi l\'épreuve.</string>
+
 </resources>

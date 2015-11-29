@@ -25,6 +25,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
+        <activity android:name=".PhotoEpreuveActivity">
+        <!--android:parentActivityName=".Accueil" -->
 
-</manifest>
+    </activity>
+</application>
+
+    </manifest>

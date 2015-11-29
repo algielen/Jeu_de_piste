@@ -7,13 +7,15 @@ public class Epreuve {
     //TODO : à compléter
     private String nom;
     private boolean completed;
+    private Zone zone;
 
     public Epreuve() {
     }
 
-    public Epreuve(String nom, boolean completed) {
+    public Epreuve(String nom, boolean completed, Zone zone) {
         this.nom = nom;
         this.completed = completed;
+        this.zone = zone;
     }
 
     public String getNom() {
@@ -30,5 +32,13 @@ public class Epreuve {
 
     public void setCompleted(boolean completed) {
         this.completed = completed;
+    }
+
+    public Zone getZone() {
+        return zone;
+    }
+
+    public void setZone(Zone zone) {
+        this.zone = zone;
     }
 }
