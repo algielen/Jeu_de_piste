@@ -3,6 +3,7 @@
     package="be.ipl.groupe17.jeudepiste">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- use gps -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- check wifi -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- save pic -->
 

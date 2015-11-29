@@ -22,4 +22,5 @@
     <string name="button_game_stop">Arrêter la partie</string>
     <string name="text_location_label">Votre position :</string>
     <string name="text_unknown_location">Position inconuue</string>
+    <string name="default_listview_item">Inconnu</string>
 </resources>
